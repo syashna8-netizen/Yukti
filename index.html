@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YUKTI S | Developer Portfolio</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+    font-family:'Poppins',sans-serif;
+    background:#0f172a;
+    color:#fff;
+}
+
+/* NAVBAR */
+nav{
+    display:flex;
+    justify-content:space-between;
+    padding:20px 10%;
+    background:#0f172a;
+    position:sticky;
+    top:0;
+}
+nav h2{color:#38bdf8}
+nav a{
+    margin-left:20px;
+    color:#cbd5f5;
+    text-decoration:none;
+}
+
+/* HERO */
+.hero{
+    height:90vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    text-align:center;
+}
+.hero h1{font-size:3rem}
+.hero span{color:#38bdf8}
+
+.btn{
+    margin-top:20px;
+    padding:10px 25px;
+    background:#38bdf8;
+    border:none;
+    border-radius:30px;
+    cursor:pointer;
+}
+
+/* SECTIONS */
+section{padding:60px 10%}
+.title{font-size:2rem;margin-bottom:20px}
+
+/* SKILLS */
+.skills{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+}
+.skill{
+    padding:10px 20px;
+    background:#1e293b;
+    border-radius:20px;
+}
+
+/* PROJECTS */
+.projects{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
+}
+.card{
+    background:#1e293b;
+    padding:20px;
+    border-radius:15px;
+}
+
+/* CONTACT */
+input,textarea{
+    width:100%;
+    padding:10px;
+    margin:10px 0;
+    border-radius:10px;
+    border:none;
+}
+
+button{
+    background:#38bdf8;
+    border:none;
+    padding:10px;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+/* FOOTER */
+footer{
+    text-align:center;
+    padding:20px;
+    background:#020617;
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav>
+    <h2>YUKTI S</h2>
+    <div>
+        <a href="#home">Home</a>
+        <a href="#skills">Skills</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+    </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero" id="home">
+    <h1>Hi, I'm <span>YUKTI S</span></h1>
+    <p>Frontend Developer | Student | Tech Enthusiast</p>
+    <button class="btn" onclick="scrollToContact()">Hire Me</button>
+</div>
+
+<!-- SKILLS -->
+<section id="skills">
+    <h2 class="title">Skills</h2>
+    <div class="skills">
+        <div class="skill">HTML</div>
+        <div class="skill">CSS</div>
+        <div class="skill">JavaScript</div>
+        <div class="skill">Node.js</div>
+        <div class="skill">Firebase</div>
+    </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+    <h2 class="title">Projects</h2>
+    <div class="projects">
+        <div class="card">
+            <h3>Food Ordering App</h3>
+            <p>Full stack app using Node.js</p>
+        </div>
+        <div class="card">
+            <h3>Cloud Storage App</h3>
+            <p>Upload files using Firebase</p>
+        </div>
+        <div class="card">
+            <h3>Portfolio Website</h3>
+            <p>Responsive personal portfolio</p>
+        </div>
+    </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+    <h2 class="title">Contact Me</h2>
+    <form id="form">
+        <input type="text" id="name" placeholder="Your Name" required>
+        <input type="email" id="email" placeholder="Your Email" required>
+        <textarea id="message" placeholder="Message"></textarea>
+        <button type="submit" id="btn">Send Message</button>
+    </form>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <p>© 2026 YUKTI S | All Rights Reserved</p>
+</footer>
+
+<!-- FIREBASE + JS -->
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
+
+// CONFIG
+const firebaseConfig = {
+  apiKey: "AIzaSyBe1xZx1YKZIjvPy-jkpAwRzZxsQ_ZPCHk",
+  authDomain: "YUKTI S.firebaseapp.com",
+  databaseURL: "https://YUKTI S-default-rtdb.firebaseio.com",
+  projectId: "YUKTI S",
+  storageBucket: "YUKTI S.firebasestorage.app",
+  messagingSenderId: "635216816150",
+  appId: "1:635216816150:web:bdf109f6ba62620c81ad37"
+};
+
+// INIT
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// SCROLL
+window.scrollToContact = function(){
+    document.getElementById('contact').scrollIntoView({behavior:'smooth'});
+}
+
+// FORM SUBMIT
+const form = document.getElementById("form");
+const btn = document.getElementById("btn");
+
+form.addEventListener("submit", async function(e){
+    e.preventDefault();
+
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const message = document.getElementById("message").value;
+
+    btn.innerText = "Sending...";
+    btn.disabled = true;
+
+    try {
+        const newRef = push(ref(db, "contacts"));
+
+        await set(newRef, {
+            name,
+            email,
+            message,
+            time: new Date().toISOString()
+        });
+
+        alert("✅ Message Saved in Firebase!");
+        form.reset();
+
+    } catch(err) {
+        alert("❌ Error: " + err.message);
+        console.error(err);
+    }
+
+    btn.innerText = "Send Message";
+    btn.disabled = false;
+});
+
+</script>
+
+</body>
+</html>
